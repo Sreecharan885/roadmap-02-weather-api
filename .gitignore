@@ -1,0 +1,3 @@
+*.drawio*
+*.md
+!README.md
