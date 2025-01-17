@@ -10,9 +10,10 @@ def get_weather_data(city_code):
     try:
         # Getting if it already exists
         cached_response = get_from_redis(city_code)
-        print(cached_response is None, cached_response)
+        # print(cached_response is None, cached_response)
         if not cached_response is None:
-            return (json.loads(cached_response), 200)
+            print("Found in Cache")
+            return (cached_response, 200)
     except Exception as E:
         print("Request not in cache")
     try: 
@@ -21,8 +22,8 @@ def get_weather_data(city_code):
 
         data = response.json()
         # Setting only after valid data is received
-        set_to_redis(city_code,str(data))
+        set_to_redis(city_code,data)
         return (data,200)
     except Exception:
         # Using this for now as the site always returns a response but need to add functionality to what happens when time out occurs
-        return (json.dumps({"error": str(response.content)}),400)
+        return {"error": str(response.content)},400
