@@ -19,16 +19,20 @@ limiter = Limiter(
 class Get_Weather(Resource):
 
     #You can adjust these limits as needed
-    @limiter.limit('3 per hour')
+    @limiter.limit('20 per hour')
     def get(self, city_code):
         response_from_service = get_weather_data(city_code)
-        if response_from_service[1] == 400:
-            return "Invalid request. Please recheck your API Key.", 400
-        elif response_from_service[1] == 500:
-            return response_from_service[0], 500
-        return response_from_service[0], 200
+        return response_from_service[0], response_from_service[1] 
+        # if response_from_service[1] == 400:
+        #     return response_from_service[0], 400
+        # elif response_from_service[1] == 500:
+        #     return response_from_service[0], 500
+        # return response_from_service[0], 200
     
 api.add_resource(Get_Weather,'/weather/<city_code>')
 
 if __name__ == '__main__':
-    app.run()
+    try:
+        app.run()
+    except Exception as E:
+        print("Unhandled exception raised: ",E)
