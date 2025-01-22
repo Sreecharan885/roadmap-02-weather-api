@@ -14,7 +14,6 @@ def get_weather_data(city_code):
     # Getting if it already exists
     cached_response = get_from_redis(city_code)
 
-    # print(cached_response is None, cached_response)
     if not cached_response is None:
         return (cached_response, 200)
 
@@ -22,17 +21,14 @@ def get_weather_data(city_code):
         print("Debug_Log: Not found in Cache")
         response = requests.get(url)
         data = response.json()
+    except requests.exceptions.ConnectionError or requests.exceptions.Timeout:
+        # When the site is down
+        return {"error":"Invalid API call, Unable to connect to Web API/ It returned no response"}, 502
     except Exception as H:
-        return {"error":f"Invalid API call, {str(response.content)}"}, 400
+        print(str(response.content))
+        return {"error":f"Invalid API call, check Error logs for more details"}, 400
     
-    # try:
-        # Setting only after valid data is received
     if set_to_redis(city_code,data) == True:
         return (data,200)
     else:
         return {"error": "Unable to set the value"}, 500
-    
-    # except Exception as e:
-    #     # Using this for now as the site always returns a response but need to add functionality to what happens when time out occurs
-    #     print(response.content, e)
-    #     return {"error": str(response.content)},400

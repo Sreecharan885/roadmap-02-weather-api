@@ -4,17 +4,15 @@ redis_connection_string = os.environ['REDIS_CONN_STRING']
 
 key_expiration_time = 43200 # 12 Hours
 
-def get_redis_client():
-    client = redis.Redis.from_url(redis_connection_string)
-    return client
-
 def conn_to_redis():
     try:
-        r = get_redis_client()
+        print(redis_connection_string)
+        r = redis.Redis.from_url(redis_connection_string)
         response = r.ping()
         print(response)
         return r, True
-    except redis.RedisError as E:
+    except Exception as E:
+        print(E)
         print("Connectivity to Redis failed")
         return None, False
 
