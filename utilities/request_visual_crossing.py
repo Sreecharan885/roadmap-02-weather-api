@@ -1,7 +1,5 @@
 import requests, os
-import json
 from .connect_to_redis import set_to_redis, get_from_redis, conn_to_redis
-from werkzeug.exceptions import HTTPException
 
 api_key = os.environ['API_KEY']
 

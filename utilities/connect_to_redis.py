@@ -25,7 +25,6 @@ def get_from_redis(key):
 
     r = conn_to_redis()[0]
     if r == None:
-        print("Connectivity to Redis failed")
         return None
     value = r.get(key)
     if value is None:
@@ -41,7 +40,6 @@ def set_to_redis(key,value):
     '''
     r = conn_to_redis()[0]
     if r == None:
-        print("Connectivity to Redis failed")
         return False
     r.setex(key,key_expiration_time,json.dumps(value))
     return True
